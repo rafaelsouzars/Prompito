@@ -4,7 +4,7 @@
 
 ![Version](https://img.shields.io/badge/version-1.0.0-green) ![Status](https://img.shields.io/badge/status-development-yellow) ![Github Release](https://img.shields.io/github/v/release/rafaelsouzars/prompito)
 
-Utilitario para criação de aplicações CLI.
+Utilitario para desenvolvimento de aplicações CLI.
 
 ### Notas da versão
 - Primeira versão
