@@ -155,7 +155,17 @@ using MyActionCommands;
 
 var app = new Executer();
 
-app.AddCommand(new MyActionCommand());
+app.ScreenAbout(true);
+
+app.InsertData(new {
+	AppName = "my-app",
+	Version = "v1.0.0",
+	Description = "My first app",
+	ProfileURL = "https://github.com/dev"
+	RepositorieURL = "https://github.com/dev/my-app"
+});
+
+app.AddCommand("init", "Inicia um comando", new MyActionCommand());
 
 app.ExecuteCommands(args);
 ```
