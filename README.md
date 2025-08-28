@@ -10,7 +10,7 @@ Utilitario para desenvolvimento de aplicações CLI.
 - Primeira versão
 
 ## Introdução
-O _Prompito_ é uma biblioteca que facilia o desenvolvimento de aplicações CLI.
+O _Prompito_ é uma biblioteca de desenvolvimento de aplicações CLI.
 
 ## Instalação
 Baixe o binário no repositorio clicando [aqui](https://github.com/rafaelsouzars/prompito/releases)
@@ -20,6 +20,16 @@ https://github.com/rafaelsouzars/prompito/releases
 ```
 
 ## Tutorial
+Mapa de argumentos:
+```powershell
+./prompito init -r "repo"
+```
+| Key | Value |
+|:---:|:-----:|
+|arg1 | init|
+|flag1| -r  |
+|arg2 | repo|
+
 Para iniciar o projeto:
 ```C#
 using Promito;
@@ -56,9 +66,9 @@ Criando um _ActionCommand_:
 ```C#
 using Prompito.Classes;
 
-class MyClassAction : ActionCommand
+class <MyActionCommand> : ActionCommand
 {
-	public override void Run(string[] args) 
+	public override void Run(ArgsMapper argsMapper) 
 	{
 		// Implementation
 	}
@@ -67,11 +77,11 @@ class MyClassAction : ActionCommand
 Adicionando seu _ActionCommand_:
 ```C#
 using Prompito;
-using <my-namespace>;
+using <myActionCommand-namespace>;
 
 var app = new Executer();
 
-app.AddCommand(new MyClassAction());
+app.AddCommand("command", "description", new MyActionCommand());
 
 app.ExecuteCommands(args);
 ```
@@ -83,18 +93,56 @@ using Prompito.Classes;
 
 namespace MyActionCommands
 {
-	class MyAction : ActionCommand 
-	{		
-		public override void Run (string[] args) 
+	class MyActionCommand : ActionCommand 
+	{	
+		public MyActionCommand()
+        {            
+            AddFlag(
+                "-r",
+                "--repo-hook",
+                "Criar hook a partir de repositório de script"                
+                );
+
+            AddFlag(
+                "-h",
+                "--help",
+                "Ajuda do comando"
+                );
+        }
+
+		public override void Run (ArgsMapper argsMapper) 
 		{
-			if (args.Length != 0 and args[0] == "init") 
-			{
-			
-			}
-			if (args.Length == 0) 
-			{
-				Console.Write("Help!");
-			}
+			try
+            {
+                if (argsMapper.GetArg.Count == 1) 
+                {
+                    if (hookFiles.GitHookDirectoryExist())
+                    {
+                        hookFiles.CreateHookFile();
+                    } 
+                }
+                else if (argsMapper.GetArg.Count == 2) 
+                {
+                    if (string.Equals(argsMapper.GetArg["flag1"],"-r")) 
+                    {
+                        hookFiles.CreateHookFile(hookFiles.CreateFileRepositorieStream()); 
+                    }
+                    else 
+                    {
+                        throw new ArgumentException("Argumento não reconhecido: ", argsMapper.GetArg["flag1"]);
+                    }
+                }
+                else if (argsMapper.GetArg.Count > 2) 
+                {
+                    throw new ArgumentException("Argumentos não reconhecidos: ", argsMapper.ToString());
+                }
+                                
+               
+            }
+            catch (Exception exception) 
+            {
+                Console.WriteLine(" [ ERROR ]\n\t{0}",exception.Message);
+            }
 		}
 	}
 }
@@ -107,7 +155,7 @@ using MyActionCommands;
 
 var app = new Executer();
 
-app.AddCommand(new MyAction());
+app.AddCommand(new MyActionCommand());
 
 app.ExecuteCommands(args);
 ```
