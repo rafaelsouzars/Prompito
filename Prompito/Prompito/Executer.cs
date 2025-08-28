@@ -1,8 +1,8 @@
 ﻿/*
  * 
- * Ganchito
- * Version: v1.0.0
- * Description: Utilitário de git hooks
+ * Prompito
+ * Version: v1.1.0
+ * Description: Ferramenta C# para criação de CLI
  * Author: rafaelsouzars
  * Github: https://github.com/rafaelsouzars
  * 
@@ -19,8 +19,9 @@ namespace Prompito
     class Executer : IExecuter
     {        
         private static object? _appData;
-        private static bool _DEBUG_MODE = false;
-        private static List<ActionCommand> _receivers = new List<ActionCommand>();
+        private static bool _DEBUG_MODE = false;        
+        private HelpCommand _appHelperActionCommand = new HelpCommand();
+        private Dictionary<string, (string, ActionCommand)> _receivers = new Dictionary<string, (string, ActionCommand)>();
 
         public bool DEBUG_MODE { get => _DEBUG_MODE; set { _DEBUG_MODE = value; } }       
         
@@ -44,11 +45,11 @@ namespace Prompito
             {                
                 _appData = appData ?? throw new ArgumentNullException("O ProgramData não pode ser nulo", nameof(appData));
 
-                var appName = _appData?.GetType().GetProperty("AppName")?.GetValue(_appData);
-                var version = _appData?.GetType().GetProperty("Version")?.GetValue(_appData);
-                var description = _appData?.GetType().GetProperty("Description")?.GetValue(_appData);
-                var profileURL = _appData?.GetType().GetProperty("ProfileURL")?.GetValue(_appData);
-                var repositorieURL = _appData?.GetType().GetProperty("RepositorieURL")?.GetValue(_appData);                
+                var appName = _appData?.GetType().GetProperty("AppName")?.GetValue(_appData) ?? "";
+                var version = _appData?.GetType().GetProperty("Version")?.GetValue(_appData) ?? "";
+                var description = _appData?.GetType().GetProperty("Description")?.GetValue(_appData) ?? "";
+                var profileURL = _appData?.GetType().GetProperty("ProfileURL")?.GetValue(_appData) ?? "";
+                var repositorieURL = _appData?.GetType().GetProperty("RepositorieURL")?.GetValue(_appData) ?? "";                
 
                 Screen.About(new AppData((string)appName, (string)version, (string)description, (string)profileURL, (string)repositorieURL));
                                 
@@ -62,36 +63,70 @@ namespace Prompito
         }
 
         /// <summary>
-        /// O Método ExecuteCommand. Recebe um array de argumentos, do Console, e repassa para o metodo Run() dos Commands.
+        /// Método ExecuteCommand(). Recebe um array de argumentos, do Console, e repassa para o metodo Run() dos Commands.
         /// </summary>
         /// <param name="args">Array de argumentos repassa pelo console</param>        
         public void ExecuteCommands(string[] args) 
         {
-            try 
+            try
             {
-                foreach (var receiver in _receivers)
+                if (args.Length >= 1)
                 {
-                    var command = new Command<ActionCommand>(receiver, r => r.Run(args));
-                    command.Execute();
-                }         
-                
+                    if (_receivers.Keys.Contains<string>(args[0]))
+                    {
+                        if (_receivers.TryGetValue(args[0], out (string, ActionCommand) receiver))
+                        {
+                            var command = new Command<ActionCommand>(receiver.Item2, r => r.Run(new ArgsMapper(args)));
+                            command.Execute();
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("\tMessage: Commando não reconhecido\n");
+                    }
+
+                }
+                else
+                {
+                    if (_appHelperActionCommand != null)
+                    {
+                        var command = new Command<HelpCommand>(_appHelperActionCommand, r => r.Run(_receivers));
+                        command.Execute();
+                    }
+                    else
+                    {
+                        Console.WriteLine("\tSem ação para este comando.\n\tUtilize o método AppHelperActionCommand() para adicionar a ajuda do programa.\n");
+                    }
+                }
+
             }
-            catch (Exception exception) 
+            catch (Exception exception)
             {
                 Console.WriteLine(exception);
             }
-            
+
+        }
+
+        /// <summary>
+        /// Método AddCommand(). Adiciona um commando ao Executer
+        /// </summary>
+        /// <param name="commandName"></param>
+        /// <param name="newActionCommand"></param>        
+        public void AddCommand (string commandName, ActionCommand newActionCommand)
+        {
+            _receivers.Add(commandName, ("", newActionCommand));
         }
 
         /// <summary>
         /// Método AddCommand. Adiciona um commando ao Executer
         /// </summary>
         /// <param name="commandName"></param>
-        /// <param name="newCommand"></param>        
-        public void AddCommand(ActionCommand newCommand)
+        /// <param name="newActionCommand"></param> 
+        public void AddCommand (string commandName, string description, ActionCommand newActionCommand)
         {
-            _receivers.Add(newCommand);
-        }             
+            _receivers.Add(commandName, (description, newActionCommand));
+        }
+        
 
         /// <summary>
         /// Método ScreenAbout. Ativa e desativa a tela do App.

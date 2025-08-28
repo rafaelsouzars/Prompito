@@ -14,27 +14,26 @@ namespace Prompito.Classes
 {
     class AppData
     {
-        private string _appName;
-        private string _versionNumber;
-        private string _description;
-        private string _profileURL;
-        private string _repositorieURL;
+        private string _appName = "";
+        private string _versionNumber = "";
+        private string _description = "";
+        private string _profileURL = "";
+        private string _repositorieURL = "";
         public string GetAppName { get => _appName; }
         public string GetVersionNumber { get => _versionNumber; }
         public string GetDescription { get => _description; }
         public string GetProfileURL { get => _profileURL; }
         public string GetRepositorieURL { get => _repositorieURL; }
 
-        public AppData(string appName, string versionNumber, string description, string profileURL, string repositorieURL)
+        public AppData(string appName = "Prompito", string versionNumber = "v1.0.0", string description = "", string profileURL = "", string repositorieURL = "")
         {
             try 
             {                
-                               
 
                 if (string.IsNullOrWhiteSpace(appName))
                 {
-                    var app = new Program();
-                    _appName = app.ToString().Replace(".Program", "");                    
+                                       
+                    _appName = new Program().ToString().Replace(".Program", "") ?? "Prompito";                    
                 }
                 else
                 {
@@ -49,7 +48,7 @@ namespace Prompito.Classes
             }
             catch (Exception exception) 
             {
-                Console.WriteLine("ERROR: {0}", exception);
+                Console.WriteLine(" [ ERROR ]\n\t{0}", exception);
             }
             
         }

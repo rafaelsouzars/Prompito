@@ -8,20 +8,17 @@
  * 
  */
 
-
 namespace Prompito.AbstractClasses
 {
     public abstract class AbstractActionCommandBase
     {        
         protected bool _DEBUG = false;
-
         
         public bool DEBUG { get => _DEBUG; set { _DEBUG = value; } }
-        
 
-        abstract public void Run();
+        protected AbstractActionCommandBase() { }
 
-        abstract public void Run(string[] args);
+        public abstract void Run();
 
         public void Help(string appName, string description)
         {

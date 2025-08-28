@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="AbstractClasses\" />
     <Folder Include="Prompito\ActionCommands\" />
   </ItemGroup>
 
