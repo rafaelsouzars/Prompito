@@ -8,26 +8,44 @@
  * 
  */
 using Prompito.AbstractClasses;
+using Prompito.Classes;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Prompito.Classes
 {
+    /// <summary>
+    /// Está classe pai cria uma instância <b>ActionCommand</b> para execução dos comandos. <br/>    
+    /// Ela deve ser herdada para criar novos ActionCommand: <code>class MyActionCommand : ActionCommand</code>       
+    /// </summary>           
+    /// <remarks>
+    /// <example>
+    /// <code>Exemplo:<br/>
+    /// var app = new Executer();
+    /// app.AddCommand("init", "Inicia alguma coisa", new MyActionCommand())
+    /// </code>
+    /// </example>        
+    /// </remarks>
     class ActionCommand : AbstractActionCommandBase
-    {               
-        private Dictionary<string, (string, string)> _flags = new Dictionary<string, (string, string)>();
-       
-        public Dictionary<string, (string, string)> Flags
+    {
+        protected Dictionary<string, (string, string)> _flags = new Dictionary<string, (string, string)>();
+        protected ReadOnlyDictionary<string, (string, string)> _flagsReadOnly;
+        protected bool _DEBUG = false;
+        public bool DEBUG { get => _DEBUG; set { _DEBUG = value; } }
+
+        public ReadOnlyDictionary<string, (string, string)> Flags
         {
             get
             {
-                return _flags;
+                return _flagsReadOnly;
             }
-
-            private set
-            {
-                _flags = value;
-            }
+            
+        } 
+        
+        public ActionCommand()
+        {
+            _flagsReadOnly = new(_flags);
         }
 
         private bool FlagVerify(string flag)
@@ -58,43 +76,137 @@ namespace Prompito.Classes
             }
         }
 
-        private bool ContainsFlag(string flag)
+        private bool FlagsVerify(string flag)
+        {
+            var flagsRegex = new Regex(@"^(-[a-zA-Z0-9])|(--([a-zA-Z0-9]{2,})(-[a-zA-Z0-9]+)?)$");
+
+            if (flagsRegex.IsMatch(flag))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Método EqualsFlags(string <paramref name="flagMapper"/>, string <paramref name="flagAdd"/>).<br/>
+        /// Testa se a flag mapeada é igual a uma das flags do comando.
+        /// </summary>
+        /// <param name="flagMapper">Valor da flag mapeada. <i>ArgsMapper.GetArgs["flag1"]</i></param>
+        /// <param name="flagAdd">String com a Key das flags adicionadas.</param>  
+        /// <remarks>Exemplos de formatos de flags e sua versões extendidas: "-e", "-X", "-8", "--extend-flags", "--extend".</remarks>
+        public override bool EqualsFlags(string flagMapper, string flagAdd)
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(flag))
+                if (!string.IsNullOrWhiteSpace(flagMapper) && !string.IsNullOrWhiteSpace(flagAdd))
                 {
-                    if (FlagVerify(flag))
+                    if (FlagsVerify(flagMapper) && FlagsVerify(flagAdd))
                     {
-                        if (_flags.ContainsKey(flag))
+                        if (FlagVerify(flagMapper))
                         {
-                            return true;
+                            if (!_flags.ContainsKey(flagMapper) || !_flags.ContainsKey(flagAdd)) 
+                            {
+                                return false;
+                                throw new ArgumentNullException("Uma ou mais flags não foram adicionadas ao comando.");                                
+                            }
+                            else 
+                            {
+                                if (string.Equals(Flags[flagMapper].Item1, Flags[flagAdd].Item1))
+                                {                                    
+                                    return true;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            }                            
                         }
-                        else
+                        if (ExtendFlagVerify(flagMapper))
                         {
-                            return false;
+                            if (_flags.TryGetValue(flagAdd, out (string, string) value) && string.Equals(flagMapper, value.Item1))
+                            {                                
+                                return true;
+                            }
+                            else 
+                            {
+                                return false;
+                            }
                         }
                     }
+                    else
+                    {
+                        throw new ArgumentException($"Um dos parametros não contém um formato de flag. {flagMapper} {flagAdd}");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentNullException("Nenhum dos arqumentos podem ser nulo");
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(" [ ERROR ]\n\t{0}", exception.Message);
+            }
+            return false;            
+        }
+
+        /// <summary>
+        /// Método ContainsFlags(string <paramref name="flag"/>). Verifica a existencia de uma flag ou versão extendida.
+        /// </summary>
+        /// <param name="flag">String com a flag</param>        
+        /// <remarks>Exemplos de formatos de flags e sua versões extendidas: "-e", "-X", "-8", "--extend-flags", "--extend".</remarks>
+        public override bool ContainsFlags (string flag) 
+        {            
+            try
+            {                
+                if (!string.IsNullOrWhiteSpace(flag))
+                {
+                    if (FlagsVerify(flag))
+                    {
+                        if (FlagVerify(flag))
+                        {
+                            if (_flags.ContainsKey(flag))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        if (ExtendFlagVerify(flag))
+                        {
+                            foreach (var flagValue in _flags)
+                            {
+                                if (flagValue.Value.Item1.Contains(flag))
+                                {
+                                    return true;
+                                }                                
+                            }
+                        }
+                    }                                       
                     else
                     {
                         throw new ArgumentException("Formato de flag não reconhecido. ", flag);
                     }
                 }
                 else
-                {
+                {                    
                     throw new ArgumentNullException(nameof(flag), "O arqumento não pode ser nulo");
                 }
             }
             catch (Exception exception)
             {
-                Console.WriteLine(" [ ERROR ]\n\t{0}", exception.Message);
-                return false;
+                Console.WriteLine(" [ ERROR ]\n\t{0}", exception.Message);                
             }
-
-        }
+            return false;
+        }        
 
         /// <summary>
-        /// Método AddFlag(). Adiciona uma flag ao ActionCommand.
+        /// Método AddFlag(string <paramref name="flag"/>). Adiciona uma flag ao ActionCommand.
         /// </summary>
         /// <param name="flag">String com a flag</param>        
         /// <remarks>Exemplos de formatos de flags: "-e", "-X" e "-8".</remarks>
@@ -105,6 +217,7 @@ namespace Prompito.Classes
                 if (FlagVerify(flag))
                 {
                     _flags.Add(flag, ("", ""));
+                    _flagsReadOnly = new ReadOnlyDictionary<string, (string, string)>(_flags);                    
                 }
                 else
                 {
@@ -119,12 +232,22 @@ namespace Prompito.Classes
 
         }
 
-        /// <summary>
-        /// Método AddFlag(). Adiciona uma flag ao ActionCommand e sua versão extendida.
+        /// <summary>        
+        /// <para>Adiciona uma flag e sua versão extendida ao <b>ActionCommand</b>.</para>
         /// </summary>
         /// <param name="flag">String com a flag</param>
-        /// <param name="extendFlag">String com a flag extendida</param>
-        /// <remarks>Exemplo de formato de flag extendida: "--add-flags".</remarks>
+        /// <param name="extendFlag">String com a flag extendida</param>        
+        /// <remarks>
+        /// <example>Exemplo:
+        /// <code>
+        /// AddFlag(
+        ///     "-r",
+        ///     "--repo-hook",
+        ///     "Criar hook a partir de repositório de script"
+        ///     );
+        /// </code>
+        /// </example>
+        /// </remarks>
         public void AddFlag(string flag, string extendFlag)
         {
             try
@@ -132,6 +255,7 @@ namespace Prompito.Classes
                 if (FlagVerify(flag) && ExtendFlagVerify(extendFlag))
                 {
                     _flags.Add(flag, (extendFlag, ""));
+                    _flagsReadOnly = new ReadOnlyDictionary<string, (string, string)>(_flags);
                 }
                 if (!FlagVerify(flag))
                 {
@@ -148,13 +272,23 @@ namespace Prompito.Classes
             }
         }
 
-        /// <summary>
-        /// Método AddFlag(). Adiciona uma flag ao ActionCommand, sua versão extendida e uma descrição.
+        /// <summary>        
+        /// <para>Adiciona uma flag, sua versão extendida e uma descrição ao <b>ActionCommand</b>.</para>
         /// </summary>
         /// <param name="flag">String com a flag</param>
         /// <param name="extendFlag">String com a flag extendida</param>
         /// <param name="descriptionFlag">String com a descrição da flag</param>
-        /// <remarks>Exemplo de formato de flag extendida: "--add-flags".</remarks>
+        /// <remarks>
+        /// <example>Exemplo:
+        /// <code>
+        /// AddFlag(
+        ///     "-r",
+        ///     "--repo-hook",
+        ///     "Criar hook a partir de repositório de script"
+        ///     );
+        /// </code>
+        /// </example>
+        /// </remarks>
         public void AddFlag(string flag, string extendFlag, string descriptionFlag)
         {
             try
@@ -162,6 +296,7 @@ namespace Prompito.Classes
                 if (FlagVerify(flag) && ExtendFlagVerify(extendFlag))
                 {
                     _flags.Add(flag, (extendFlag, descriptionFlag));
+                    _flagsReadOnly = new ReadOnlyDictionary<string, (string, string)>(_flags);
                 }
                 if (!FlagVerify(flag))
                 {
@@ -190,7 +325,7 @@ namespace Prompito.Classes
             try
             {
 
-                if (ContainsFlag(flag))
+                if (ContainsFlags(flag))
                 {
                     var tuple = _flags[flag];
 
@@ -221,7 +356,7 @@ namespace Prompito.Classes
             try
             {
 
-                if (ContainsFlag(flag))
+                if (ContainsFlags(flag))
                 {
                     var tuple = _flags[flag];
 
@@ -239,23 +374,24 @@ namespace Prompito.Classes
             {
                 Console.WriteLine(" [ ERROR ]\n\t{0}", exception.Message);
             }
-        }
-
-        /// <summary>
-        /// Método Run(). Executa o código implementado no escopo quando o comando for executado.
-        /// </summary>              
-        /// <remarks>Deve ser implementado em cada classe derivada.</remarks>
-        public override void Run()
+        }  
+        
+        protected void Help() 
         {
+            Console.WriteLine(" [ AJUDA ]\n");
 
+            foreach (var flag in Flags)
+            {
+                Console.WriteLine("\t{0,-2} {1,-12} - {2,10}\n", flag.Key, flag.Value.Item1, flag.Value.Item2);
+            }
         }
 
         /// <summary>
-        /// Método Run(). Executa o código implementado no escopo quando o comando for executado.
+        /// Método Run(ArgsMapper <paramref name="argsMapper"/>). Executa o código implementado no escopo quando o comando for executado.
         /// </summary>
-        /// <param name="args">Recebe os argumentos do console</param>        
+        /// <param name="argsMapper">Parametro com a instância dos argumentos mapeados</param>        
         /// <remarks>Deve ser implementado em cada classe derivada.</remarks>
-        public virtual void Run(ArgsMapper argsMapper)
+        public override void Run(ArgsMapper argsMapper)
         {
 
         }        

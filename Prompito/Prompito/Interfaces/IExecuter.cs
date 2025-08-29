@@ -13,9 +13,7 @@ using Prompito.Classes;
 namespace Prompito.Interfaces
 {
     interface IExecuter
-    {
-
-        public bool DEBUG_MODE { get; set; }
+    {        
         public void Init() 
         {
             

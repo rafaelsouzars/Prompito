@@ -21,18 +21,7 @@ namespace Prompito
         private static object? _appData;
         private static bool _DEBUG_MODE = false;        
         private HelpCommand _appHelperActionCommand = new HelpCommand();
-        private Dictionary<string, (string, ActionCommand)> _receivers = new Dictionary<string, (string, ActionCommand)>();
-
-        public bool DEBUG_MODE { get => _DEBUG_MODE; set { _DEBUG_MODE = value; } }       
-        
-
-        private static void DebugMode(string message)
-        {
-            if (_DEBUG_MODE)
-            {
-                Console.WriteLine($" [ DEBUG MODE ON ]\n\t{message}\n");
-            }
-        }
+        private Dictionary<string, (string, ActionCommand)> _receivers = new Dictionary<string, (string, ActionCommand)>();               
 
         /// <summary>
         /// O Método InsertAppData. Recebe um object com as informações da aplicação.
@@ -51,9 +40,7 @@ namespace Prompito
                 var profileURL = _appData?.GetType().GetProperty("ProfileURL")?.GetValue(_appData) ?? "";
                 var repositorieURL = _appData?.GetType().GetProperty("RepositorieURL")?.GetValue(_appData) ?? "";                
 
-                Screen.About(new AppData((string)appName, (string)version, (string)description, (string)profileURL, (string)repositorieURL));
-                                
-                DebugMode($"AppName: {appName}, Version: {version}, Description: {description}, Profile: {profileURL}, Repositorie: {repositorieURL}");
+                Screen.About(new AppData((string)appName, (string)version, (string)description, (string)profileURL, (string)repositorieURL));               
                 
             }
             catch (Exception exception)
@@ -82,7 +69,7 @@ namespace Prompito
                     }
                     else
                     {
-                        throw new ArgumentException("\tMessage: Commando não reconhecido\n");
+                        throw new ArgumentException($" {args[0],-5} - Commando não reconhecido\n");
                     }
 
                 }
@@ -102,7 +89,7 @@ namespace Prompito
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception);
+                Console.WriteLine(exception.Message);
             }
 
         }
