@@ -5,11 +5,35 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/rafaelsouzars/Prompito</PackageProjectUrl>
+    <Description>Utilitário para desenvolvimento de aplicações CLI.</Description>
+    <Title>prompito</Title>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/rafaelsouzars/Prompito</RepositoryUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="AbstractClasses\" />
-    <Folder Include="Prompito\ActionCommands\" />
+    <Compile Remove="AbstractClasses\**" />
+    <EmbeddedResource Remove="AbstractClasses\**" />
+    <None Remove="AbstractClasses\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Prompito\AbstractClasses\AbstractFlagsBase.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

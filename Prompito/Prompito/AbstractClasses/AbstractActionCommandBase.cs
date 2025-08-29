@@ -7,23 +7,20 @@
  * Github: https://github.com/rafaelsouzars
  * 
  */
+using Prompito.Classes;
+using System.Collections.ObjectModel;
 
 namespace Prompito.AbstractClasses
 {
     public abstract class AbstractActionCommandBase
-    {        
-        protected bool _DEBUG = false;
-        
-        public bool DEBUG { get => _DEBUG; set { _DEBUG = value; } }
-
+    {
         protected AbstractActionCommandBase() { }
 
-        public abstract void Run();
+        public abstract bool EqualsFlags(string flagMapper, string flagAdd);
 
-        public void Help(string appName, string description)
-        {
-            Console.WriteLine("[ {0} ]\n\tDescrição: {1}", appName, description);
-        }
+        public abstract bool ContainsFlags(string flag);
+        
+        public abstract void Run(ArgsMapper argsMapper);        
 
     }
 }

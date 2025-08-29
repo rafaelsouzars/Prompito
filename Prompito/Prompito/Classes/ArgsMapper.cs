@@ -10,10 +10,13 @@
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
-
 namespace Prompito.Classes
 {
-    class ArgsMapper
+    /// <summary>
+    /// class ArgsMapper. Mapeia o array de argumentos identificando como argumentos e flags.
+    /// </summary>            
+    /// <remarks>Exemplo. A entrada da linha "init -r 'olá'" é mapeada como "arg1","flag1" e "arg2"</remarks>
+    public class ArgsMapper
     {
         private readonly Dictionary<string, string> _args = new();
         private ReadOnlyDictionary<string, string> _readOnlyArgs;
@@ -23,6 +26,14 @@ namespace Prompito.Classes
             get
             {
                 return _readOnlyArgs;
+            }
+        }
+
+        public int Count 
+        {
+            get 
+            {
+                return _readOnlyArgs.Count;
             }
         }
 
@@ -59,6 +70,29 @@ namespace Prompito.Classes
             }
 
             _readOnlyArgs = new ReadOnlyDictionary<string, string>(_args);
+        }
+
+        public string[] ToArray ()
+        {
+            string[] args = new string[] { };
+            if (_args.Count > 0)
+            {
+                foreach (var arg in _args)
+                {
+                    //Console.WriteLine(" {0} => {1}", arg.Key, arg.Value);
+                    args = args.Append<string>($"{arg.Key} => {arg.Value}\n").ToArray();
+                }
+            }
+
+            return args;
+        }
+
+        public void ShowArgsMapper () 
+        {
+            foreach(var elements in ToArray()) 
+            {
+                Console.WriteLine(elements);
+            }
         }
 
         public override string ToString()
