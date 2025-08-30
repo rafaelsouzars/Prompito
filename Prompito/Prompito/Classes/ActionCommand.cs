@@ -8,9 +8,7 @@
  * 
  */
 using Prompito.AbstractClasses;
-using Prompito.Classes;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Prompito.Classes
@@ -110,7 +108,7 @@ namespace Prompito.Classes
                             if (!_flags.ContainsKey(flagMapper) || !_flags.ContainsKey(flagAdd)) 
                             {
                                 return false;
-                                throw new ArgumentNullException("Uma ou mais flags não foram adicionadas ao comando.");                                
+                                throw new ArgumentNullException("Uma ou mais flags de EqualsFlags() não foram adicionadas ao comando.");                                
                             }
                             else 
                             {
@@ -138,12 +136,12 @@ namespace Prompito.Classes
                     }
                     else
                     {
-                        throw new ArgumentException($"Um dos parametros não contém um formato de flag. {flagMapper} {flagAdd}");
+                        throw new ArgumentException($"Um dos parametros de EqualsFlags() não contém um formato de flag. {flagMapper} {flagAdd}");
                     }
                 }
                 else
                 {
-                    throw new ArgumentNullException("Nenhum dos arqumentos podem ser nulo");
+                    throw new ArgumentNullException("Nenhum dos parametros de EqualsFlags() podem ser nulo");
                 }
             }
             catch (Exception exception)
@@ -190,12 +188,12 @@ namespace Prompito.Classes
                     }                                       
                     else
                     {
-                        throw new ArgumentException("Formato de flag não reconhecido. ", flag);
+                        throw new ArgumentException("Formato de flag não reconhecido no parametro de ConstainsFlags(). ", flag);
                     }
                 }
                 else
                 {                    
-                    throw new ArgumentNullException(nameof(flag), "O arqumento não pode ser nulo");
+                    throw new ArgumentNullException(nameof(flag), "O parametro de ConstainsFlags() não pode ser nulo");
                 }
             }
             catch (Exception exception)
