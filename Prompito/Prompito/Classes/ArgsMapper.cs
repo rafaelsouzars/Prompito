@@ -20,22 +20,40 @@ namespace Prompito.Classes
     {
         private readonly Dictionary<string, string> _args = new();
         private ReadOnlyDictionary<string, string> _readOnlyArgs;
+        private readonly int _countArgs = 0;
+        private readonly int _countFlags = 0;
 
-        public ReadOnlyDictionary<string, string> GetArg
+        public ReadOnlyDictionary<string, string> GetArgsMapper
         {
             get
             {
                 return _readOnlyArgs;
             }
-        }
+        }        
 
-        public int Count 
+        public int TotalArgs
         {
             get 
             {
                 return _readOnlyArgs.Count;
             }
         }
+
+        public int CountArgs
+        {
+            get
+            {
+                return _countArgs;
+            }
+        }
+
+        public int CountFlags 
+        {
+            get 
+            {
+                return _countFlags;
+            }
+        }       
 
         public ArgsMapper(string[] args)
         {
@@ -52,16 +70,19 @@ namespace Prompito.Classes
                         if (!flagsRegex.IsMatch(arg))
                         {
                             _args.Add($"arg{indexArg}", arg);
-                            indexArg++;
+                            _countArgs = indexArg;
+                            indexArg++;                            
                         }
                         else
                         {
                             _args.Add($"flag{indexFlag}", arg);
-                            indexFlag++;
+                            _countFlags = indexFlag;
+                            indexFlag++;                            
                         }
                     }
                     
                 }
+                
 
             }
             catch (Exception exception)
@@ -70,6 +91,44 @@ namespace Prompito.Classes
             }
 
             _readOnlyArgs = new ReadOnlyDictionary<string, string>(_args);
+        }
+
+        public string GetArgs(string keyArgMapper)
+        {
+            try
+            {
+                var keyArgMapperRegex = new Regex("^((arg|flag)([1-9]+))$");
+
+                if (!string.IsNullOrWhiteSpace(keyArgMapper))
+                {
+                    if (keyArgMapperRegex.IsMatch(keyArgMapper))
+                    {
+                        if (_readOnlyArgs.ContainsKey(keyArgMapper))
+                        {
+                            return _readOnlyArgs[keyArgMapper];
+                        }
+                        else
+                        {
+                            return string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Formato do parametro keyArgMapper, de GetArgs(), não reconhecido!", nameof(keyArgMapper));
+                    }
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(keyArgMapper),"O parametro de GetArgs() não pode ser nulo ou conter espaços!");
+                }
+
+
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(" [ ERROR ]\n\t{0}", exception.Message);
+            }
+            return string.Empty;
         }
 
         public string[] ToArray ()

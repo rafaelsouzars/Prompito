@@ -27,6 +27,12 @@ namespace Prompito.ActionCommands
                 );
 
             AddFlag(
+                "-a",
+                "--args",
+                "Retorna os argumentos."
+                );
+
+            AddFlag(
                 "-f",
                 "--flags",
                 "Retorna as flags."
@@ -43,38 +49,38 @@ namespace Prompito.ActionCommands
         {
             try
             {
-                if (argsMapper.Count == 1)
+                if (argsMapper.TotalArgs == 1)
                 {
                     Help();
                 }
-                else if (argsMapper.Count == 2)
+                else if (argsMapper.TotalArgs > 1)
                 {
-                    if (EqualsFlags(argsMapper.GetArg["flag1"], "-m"))
+                    if (EqualsFlags(argsMapper.GetArgs("flag1"), "-m"))
                     {
-                        Console.WriteLine("Mensagem do Prompito");
+                        Console.WriteLine(argsMapper.GetArgs("arg2"));
                     }
-                    else if (EqualsFlags(argsMapper.GetArg["flag1"], "-f"))
+                    if (EqualsFlags(argsMapper.GetArgs("flag1"), "-a"))
+                    {
+                        argsMapper.ShowArgsMapper();
+                    }
+                    else if (EqualsFlags(argsMapper.GetArgs("flag1"), "-f"))
                     {
                         foreach (var f in Flags)
                         {
                             Console.WriteLine("Flag => {0}", f);
                         }
                     }
-                    else if (EqualsFlags(argsMapper.GetArg["flag1"], "-h")) 
+                    else if (EqualsFlags(argsMapper.GetArgs("flag1"), "-h")) 
                     {
                         Help();
                     }                    
-                }
-                else if (argsMapper.Count > 2)
-                {
-                    throw new ArgumentException("Argumentos não reconhecidos: ", argsMapper.ToString());
-                }
+                }                
 
 
             }
             catch (Exception exception)
             {
-                Console.WriteLine(" [ ERROR ]\n\t{0}", exception.Message);
+                Console.WriteLine(" [ ERROR ]\n\tRun(ArgsMapper argsMapper) - {0}", exception.Message);
             }
         }
     }
