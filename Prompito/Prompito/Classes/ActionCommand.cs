@@ -46,6 +46,17 @@ namespace Prompito.Classes
             _flagsReadOnly = new(_flags);
         }
 
+        /// <summary>        
+        /// Este método valida o formato de flag: <i>"-r"</i>
+        /// </summary>
+        /// <param name="flag">String com o formato de flag</param>         
+        /// <remarks>
+        /// <example>Exemplo: <code>
+        ///     string flag = "-r";
+        ///     if (FlagVerify(flag)) { //code }
+        /// </code></example>
+        /// <i>Obs: Método private</i>
+        /// </remarks>
         private bool FlagVerify(string flag)
         {
             var flagRegex = new Regex(@"^(-[a-zA-Z0-9])$");
@@ -60,6 +71,17 @@ namespace Prompito.Classes
             }
         }
 
+        /// <summary>        
+        /// Este método valida o formato de flag: <i>"--rato-roeu"</i>
+        /// </summary>
+        /// <param name="flag">String com o formato de flag</param>         
+        /// <remarks>
+        /// <example>Exemplo: <code>
+        ///     string flag = "--rato-roeu";
+        ///     if (ExtendFlagVerify(flag)) { //code }
+        /// </code></example>
+        /// <i>Obs: Método private</i>
+        /// </remarks>
         private bool ExtendFlagVerify(string flag)
         {
             var extendFlagRegex = new Regex(@"^(--([a-zA-Z0-9]{2,})(-[a-zA-Z0-9]+)?)$");
@@ -74,6 +96,17 @@ namespace Prompito.Classes
             }
         }
 
+        /// <summary>        
+        /// Este método valida os dois formatos de flag: <i>"-r" e "--rato-roeu"</i>
+        /// </summary>
+        /// <param name="flag">String com o formato de flag</param>         
+        /// <remarks>
+        /// <example>Exemplo: <code>
+        ///     string flag = "-r";
+        ///     if (FlagsVerify(flag)) { //code }
+        /// </code></example>
+        /// <i>Obs: Método private</i>
+        /// </remarks>
         private bool FlagsVerify(string flag)
         {
             var flagsRegex = new Regex(@"^(-[a-zA-Z0-9])|(--([a-zA-Z0-9]{2,})(-[a-zA-Z0-9]+)?)$");
@@ -372,8 +405,14 @@ namespace Prompito.Classes
             {
                 Console.WriteLine(" [ ERROR ]\n\t{0}", exception.Message);
             }
-        }  
-        
+        }
+
+        /// <summary>        
+        /// Este método chama a tela de ajuda do aplicativo retornando as flags do comando.
+        /// </summary>               
+        /// <remarks>
+        /// <i>Obs: Método protected</i>
+        /// </remarks>
         protected void Help() 
         {
             Console.WriteLine(" [ AJUDA ]\n");
