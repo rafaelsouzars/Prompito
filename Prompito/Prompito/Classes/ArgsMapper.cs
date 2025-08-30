@@ -23,14 +23,28 @@ namespace Prompito.Classes
         private readonly int _countArgs = 0;
         private readonly int _countFlags = 0;
 
+        /// <summary>
+        /// <b>GetArgsMapper</b> Esta propriedade retorna um <b>ReadOnlyDictionary</b> com os elementos mapeados.
+        /// </summary> 
+        /// <remarks>Exemplo:<code>
+        ///     var totalArgs = argsMapper.GetArgsMapper;
+        ///     foreach (var arg in totalArgs)
+        ///     {
+        ///         WriteLine("Key: {0}, Value: {1}", arg.Key, arg.Value);
+        ///     }
+        /// </code></remarks>
         public ReadOnlyDictionary<string, string> GetArgsMapper
         {
             get
             {
                 return _readOnlyArgs;
             }
-        }        
+        }
 
+        /// <summary>
+        /// <b>TotalArgs</b> Esta propriedade retorna a quantidade total argumentos mapeados (flags e não flags).
+        /// </summary> 
+        /// <remarks>Exemplo:<code>int totalArgs = argsMapper.TotalArgs;</code></remarks>
         public int TotalArgs
         {
             get 
@@ -39,6 +53,10 @@ namespace Prompito.Classes
             }
         }
 
+        /// <summary>
+        /// <b>CountArgs</b> Esta propriedade retorna a quantidade argumentos mapeados (o que não é flag).
+        /// </summary> 
+        /// <remarks>Exemplo:<code>int countArgs = argsMapper.CountArgs;</code></remarks>
         public int CountArgs
         {
             get
@@ -47,14 +65,28 @@ namespace Prompito.Classes
             }
         }
 
+        /// <summary>
+        /// <b>CountFlags</b> Esta propriedade retorna a quantidade flags mapeadas.
+        /// </summary> 
+        /// <remarks>Exemplo:<code>int countFlags = argsMapper.CountFlags;</code></remarks>
         public int CountFlags 
         {
             get 
             {
                 return _countFlags;
             }
-        }       
+        }
 
+        /// <summary>        
+        /// Método construtor responsável em inicializar os valores mapeados.
+        /// </summary>
+        /// <param name="args">String array com os argumentos do console.</param>         
+        /// <remarks>
+        /// <example>Exemplo: <code>
+        ///     ActionCommand.Run(new ArgsMapper(args));
+        /// </code></example>
+        /// <i>Obs: Este construtor é de uso exclusivo do Executer()</i>
+        /// </remarks>
         public ArgsMapper(string[] args)
         {
             try
@@ -93,6 +125,15 @@ namespace Prompito.Classes
             _readOnlyArgs = new ReadOnlyDictionary<string, string>(_args);
         }
 
+        /// <summary>        
+        /// Este método retorna o argumento do indice mapeado.
+        /// </summary>
+        /// <param name="keyArgMapper">Indice do argumento mapeado.</param>         
+        /// <remarks>
+        /// <example>Exemplo: <code>
+        ///     var arg = argsMapper.GetArgs("arg1");
+        /// </code></example>
+        /// </remarks>
         public string GetArgs(string keyArgMapper)
         {
             try
@@ -131,6 +172,10 @@ namespace Prompito.Classes
             return string.Empty;
         }
 
+        /// <summary>
+        /// Este método retorna um string array com os indices e argumentos mapeados.
+        /// </summary>          
+        /// <remarks>Formato de saída: "arg1 => init".</remarks>
         public string[] ToArray ()
         {
             string[] args = new string[] { };
@@ -139,13 +184,17 @@ namespace Prompito.Classes
                 foreach (var arg in _args)
                 {
                     //Console.WriteLine(" {0} => {1}", arg.Key, arg.Value);
-                    args = args.Append<string>($"{arg.Key} => {arg.Value}\n").ToArray();
+                    args = args.Append<string>($"{arg.Key} => {arg.Value}").ToArray();
                 }
             }
 
             return args;
         }
 
+        /// <summary>
+        /// Este método retorna no console todos os elementos de ArgsMapper
+        /// </summary>          
+        /// <remarks>Formato de saída: "arg1 => init".</remarks>
         public void ShowArgsMapper () 
         {
             foreach(var elements in ToArray()) 
@@ -154,6 +203,10 @@ namespace Prompito.Classes
             }
         }
 
+        /// <summary>
+        /// Este método retorna uma string com todos os elementos.
+        /// </summary>          
+        /// <remarks>Formato de saída: "arg1 => init".</remarks>
         public override string ToString()
         {
             string args = "";
