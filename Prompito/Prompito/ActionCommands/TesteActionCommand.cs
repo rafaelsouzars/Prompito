@@ -39,6 +39,12 @@ namespace Prompito.ActionCommands
                 );
 
             AddFlag(
+                "-s",
+                "--sequence",
+                "Testa uma sequência."
+                );
+
+            AddFlag(
                 "-h",
                 "--help",
                 "Ajuda do comando."
@@ -59,18 +65,38 @@ namespace Prompito.ActionCommands
                     {
                         Console.WriteLine(argsMapper.GetArgs("arg2"));
                     }
+
                     if (EqualsFlags(argsMapper.GetArgs("flag1"), "-a"))
                     {
                         argsMapper.ShowArgsMapper();
                     }
-                    else if (EqualsFlags(argsMapper.GetArgs("flag1"), "-f"))
+
+                    if (EqualsFlags(argsMapper.GetArgs("flag1"), "-f"))
                     {
                         foreach (var f in Flags)
                         {
                             Console.WriteLine("Flag => {0}", f);
                         }
                     }
-                    else if (EqualsFlags(argsMapper.GetArgs("flag1"), "-h")) 
+
+                    /*if (EqualsFlags(argsMapper.GetArgs("flag1"), "-s"))
+                    {
+                        if (MappedLineTester(argsMapper, "arg1 flag1 flag2")) 
+                        {
+                            Console.WriteLine("Teste de sequência ok");
+                        }
+                        else 
+                        {
+                            Console.WriteLine("Sem correspondencia de sequência");
+                        }
+                    }*/
+
+                    if (MappedLineTester(argsMapper,"arg1 flag1","flag1=-s")) 
+                    {
+                        Console.WriteLine("Teste de sequencia ok");
+                    }
+
+                    if (EqualsFlags(argsMapper.GetArgs("flag1"), "-h")) 
                     {
                         Help();
                     }                    

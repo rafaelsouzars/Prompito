@@ -9,7 +9,9 @@
  */
 using Prompito.AbstractClasses;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace Prompito.Classes
 {
@@ -234,7 +236,91 @@ namespace Prompito.Classes
                 Console.WriteLine(" [ ERROR ]\n\t{0}", exception.Message);                
             }
             return false;
-        }        
+        } 
+        
+        public bool MappedLineTester(ArgsMapper argsMapper, string sequence) 
+        {
+            // ^(((arg|flag)([1-9]+))((\s)(arg|flag)([1-9]+))+?)$
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(sequence) && argsMapper != null) 
+                {
+                    var sequenceRegex = new Regex(@"^(((arg|flag)([1-9]+))((\s)+(arg|flag)([1-9]+))+?)$");
+                    var sequenceSplitRegex = new Regex(@"\s+");
+
+                    if (sequenceRegex.IsMatch(sequence)) 
+                    {
+                        MatchCollection matchs = sequenceRegex.Matches(sequence);                        
+                        
+                        var sequenceArgs = sequenceSplitRegex.Split(sequence);
+                        //var onlyArgs = from arg in args
+                        //where !string.IsNullOrWhiteSpace(arg) //&& !int.TryParse(arg, out number)
+                        //select arg;
+
+                        if (argsMapper.GetArgsMapper.Keys.SequenceEqual(sequenceArgs)) 
+                        { 
+                            return true;
+                        }                        
+                    }
+                    else 
+                    {
+                        throw new ArgumentException("Erro de declaração no parametro 'sequence'", nameof(sequence));
+                    }
+                }
+                else 
+                {
+                    throw new ArgumentNullException(nameof(sequence), "O parâmetro 'sequence' não pode ser nulo");
+                }
+            }
+            catch (Exception exception) 
+            {
+                Console.WriteLine(" [ ERROR ]\n\t{0}",exception.Message);
+            }
+            return false;
+            //throw new NotImplementedException("Not implementation");
+        }
+
+        public bool MappedLineTester(ArgsMapper argsMapper, string sequence, string testerFlag)
+        {
+            // ^(flag([1-9]+)=(-([a-zA-Z0-9])|--([a-zA-Z0-9]{2,})(-([a-zA-Z0-9]+))?))$
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(sequence) && !string.IsNullOrWhiteSpace(testerFlag) && argsMapper != null)
+                {
+                    var sequenceRegex = new Regex(@"^(((arg|flag)([1-9]+))((\s)+(arg|flag)([1-9]+))+?)$");
+                    var sequenceSplitRegex = new Regex(@"\s+");
+                    var testerFlagRegex = new Regex(@"^(flag([1-9]+)=(-([a-zA-Z0-9])))$");                    
+
+                    if (sequenceRegex.IsMatch(sequence) && testerFlagRegex.IsMatch(testerFlag))
+                    {
+                        MatchCollection matchs = sequenceRegex.Matches(sequence);                        
+
+                        var sequenceArgs = sequenceSplitRegex.Split(sequence);
+
+                        var flag = testerFlag.Split("=");
+
+                        if (argsMapper.GetArgsMapper.Keys.SequenceEqual(sequenceArgs) && EqualsFlags(argsMapper.GetArgs(flag[0]), flag[1]))
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Erro de declaração no parametro 'sequence' ou no parametro 'testeFlags'");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentNullException("Nenhum dos parametros podem ser nulos");
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(" [ ERROR ]\n\t{0}", exception.Message);
+            }
+            return false;
+            //throw new NotImplementedException("Not implementation");
+        }
 
         /// <summary>
         /// Método AddFlag(string <paramref name="flag"/>). Adiciona uma flag ao ActionCommand.
