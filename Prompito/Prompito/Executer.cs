@@ -18,10 +18,12 @@ namespace Prompito
     /// </summary>   
     class Executer : IExecuter
     {        
-        private static object? _appData;
-        private static bool _DEBUG_MODE = false;        
+        private static object? _appData;                
         private HelpCommand _appHelperActionCommand = new HelpCommand();
-        private Dictionary<string, (string, ActionCommand)> _receivers = new Dictionary<string, (string, ActionCommand)>();               
+        private ActionCommand? _rootActionCommand;
+        private Dictionary<string, (string, ActionCommand)> _receivers = new Dictionary<string, (string, ActionCommand)>();  
+        
+        
 
         /// <summary>
         /// O Método InsertAppData. Recebe um object com as informações da aplicação.
@@ -67,6 +69,11 @@ namespace Prompito
                             command.Execute();
                         }
                     }
+                    else if (_rootActionCommand != null) 
+                    {
+                        var command = new Command<ActionCommand>(_rootActionCommand, r => r.Run(new ArgsMapper(args)));
+                        command.Execute();
+                    }
                     else
                     {
                         throw new ArgumentException($" {args[0],-5} - Commando não reconhecido\n");
@@ -92,6 +99,18 @@ namespace Prompito
                 Console.WriteLine(exception.Message);
             }
 
+        }
+
+        public void AddRootCommand(ActionCommand rootActionCommand) 
+        {
+            try 
+            {
+                _rootActionCommand = rootActionCommand ?? throw new ArgumentNullException(nameof(rootActionCommand), "O parametro não pode ser nulo");
+            }
+            catch (Exception exception) 
+            {
+                Console.WriteLine(" [ ERROR ]\n\t{0}", exception.Message);
+            }
         }
 
         /// <summary>

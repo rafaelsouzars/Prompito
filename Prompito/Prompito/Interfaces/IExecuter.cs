@@ -29,6 +29,11 @@ namespace Prompito.Interfaces
             // Implementation
         }
 
+        public void AddRootCommand(ActionCommand rootActionCommand) 
+        {
+            
+        }
+
         public void AddCommand(string commandName, ActionCommand newCommand)
         {
 
