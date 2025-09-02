@@ -7,11 +7,7 @@
  * Github: https://github.com/rafaelsouzars
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using Prompito.Classes;
 
 namespace Prompito.ActionCommands
@@ -45,6 +41,12 @@ namespace Prompito.ActionCommands
                 );
 
             AddFlag(
+                "-p",
+                "--program-name",
+                "Nome do programa."
+                );
+
+            AddFlag(
                 "-h",
                 "--help",
                 "Ajuda do comando."
@@ -66,40 +68,35 @@ namespace Prompito.ActionCommands
                         Console.WriteLine(argsMapper.GetArgs("arg2"));
                     }
 
-                    if (EqualsFlags(argsMapper.GetArgs("flag1"), "-a"))
+                    else if (EqualsFlags(argsMapper.GetArgs("flag1"), "-a"))
                     {
                         argsMapper.ShowArgsMapper();
                     }
 
-                    if (EqualsFlags(argsMapper.GetArgs("flag1"), "-f"))
+                    else if (EqualsFlags(argsMapper.GetArgs("flag1"), "-f"))
                     {
                         foreach (var f in Flags)
                         {
                             Console.WriteLine("Flag => {0}", f);
                         }
+                    }                    
+
+                    else if (MappedLineTester(argsMapper, "arg1 flag1", "flag1=-p"))
+                    {       
+                        
+                        Console.WriteLine("{0}", AppDomain.CurrentDomain.FriendlyName);
                     }
 
-                    /*if (EqualsFlags(argsMapper.GetArgs("flag1"), "-s"))
-                    {
-                        if (MappedLineTester(argsMapper, "arg1 flag1 flag2")) 
-                        {
-                            Console.WriteLine("Teste de sequência ok");
-                        }
-                        else 
-                        {
-                            Console.WriteLine("Sem correspondencia de sequência");
-                        }
-                    }*/
-
-                    if (MappedLineTester(argsMapper,"arg1 flag1","flag1=-s")) 
+                    else if (MappedLineTester(argsMapper,"arg1 flag1","flag1=-s")) 
                     {
                         Console.WriteLine("Teste de sequencia ok");
                     }
 
-                    if (EqualsFlags(argsMapper.GetArgs("flag1"), "-h")) 
+                    else if (MappedLineTester(argsMapper, "arg1 flag1", "flag1=-h")) 
                     {
                         Help();
-                    }                    
+                    }
+                                        
                 }                
 
 

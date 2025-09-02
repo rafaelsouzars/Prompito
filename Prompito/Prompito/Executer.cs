@@ -1,7 +1,7 @@
 ﻿/*
  * 
  * Prompito
- * Version: v1.1.0
+ * Version: v1.0.0
  * Description: Ferramenta C# para criação de CLI
  * Author: rafaelsouzars
  * Github: https://github.com/rafaelsouzars
@@ -82,15 +82,17 @@ namespace Prompito
                 }
                 else
                 {
+                    if (_rootActionCommand != null) 
+                    {
+                        _rootActionCommand.Help();
+                    }
+
                     if (_appHelperActionCommand != null)
                     {
-                        var command = new Command<HelpCommand>(_appHelperActionCommand, r => r.Run(_receivers));
-                        command.Execute();
+                        var helpActionCommand = new Command<HelpCommand>(_appHelperActionCommand, r => r.Run(_receivers));
+                        helpActionCommand.Execute();                        
                     }
-                    else
-                    {
-                        Console.WriteLine("\tSem ação para este comando.\n\tUtilize o método AppHelperActionCommand() para adicionar a ajuda do programa.\n");
-                    }
+                    
                 }
 
             }

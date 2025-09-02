@@ -144,22 +144,14 @@ namespace Prompito.Classes
                                 {
                                     return true;
                                 }                                
-                            }
-                            else 
-                            {
-                                throw new ArgumentNullException("Uma ou mais flags de EqualsFlags() não foram adicionadas ao comando.");
-                            }                            
+                            }                                                        
                         }
                         else if (ExtendFlagVerify(flagMapper))
                         {
                             if (_flags.TryGetValue(flagAdd, out (string, string) value) && string.Equals(flagMapper, value.Item1))
                             {                                
                                 return true;
-                            }
-                            else
-                            {
-                                throw new ArgumentNullException("Uma ou mais flags de EqualsFlags() não foram adicionadas ao comando.");
-                            }
+                            }                            
                         }
                     }
                     else
@@ -320,7 +312,7 @@ namespace Prompito.Classes
 
                         var sequenceArgs = sequenceSplitRegex.Split(sequence);
 
-                        var flag = testerFlag.Split("=");
+                        var flag = testerFlag.Split("=");                        
 
                         if (argsMapper.GetArgsMapper.Keys.SequenceEqual(sequenceArgs))
                         {
@@ -525,9 +517,9 @@ namespace Prompito.Classes
         /// <remarks>
         /// <i>Obs: Método protected</i>
         /// </remarks>
-        protected void Help() 
+        public void Help() 
         {
-            Console.WriteLine(" [ AJUDA ]\n");
+            //Console.WriteLine(" [ AJUDA ]\n");
 
             foreach (var flag in Flags)
             {
