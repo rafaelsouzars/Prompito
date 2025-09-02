@@ -23,11 +23,12 @@ app.InsertAppData(new {
     RepositorieURL = "https://github.com/rafaelsouzars/prompito"
     });
 
+app.AddRootCommand(new TesteRootActionCommand());
+
 app.AddCommand(
     "teste",
     "Comando de teste.",
     new TesteActionCommand()
     );
-
 
 app.ExecuteCommands(args);

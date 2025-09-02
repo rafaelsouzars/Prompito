@@ -140,32 +140,27 @@ namespace Prompito.Classes
                     {
                         if (FlagVerify(flagMapper))
                         {
-                            if (!_flags.ContainsKey(flagMapper) || !_flags.ContainsKey(flagAdd)) 
+                            if (_flags.ContainsKey(flagMapper) || _flags.ContainsKey(flagAdd)) 
                             {
-                                return false;
-                                throw new ArgumentNullException("Uma ou mais flags de EqualsFlags() não foram adicionadas ao comando.");                                
+                                if (string.Equals(Flags[flagMapper].Item1, Flags[flagAdd].Item1))
+                                {
+                                    return true;
+                                }                                
                             }
                             else 
                             {
-                                if (string.Equals(Flags[flagMapper].Item1, Flags[flagAdd].Item1))
-                                {                                    
-                                    return true;
-                                }
-                                else
-                                {
-                                    return false;
-                                }
+                                throw new ArgumentNullException("Uma ou mais flags de EqualsFlags() não foram adicionadas ao comando.");
                             }                            
                         }
-                        if (ExtendFlagVerify(flagMapper))
+                        else if (ExtendFlagVerify(flagMapper))
                         {
                             if (_flags.TryGetValue(flagAdd, out (string, string) value) && string.Equals(flagMapper, value.Item1))
                             {                                
                                 return true;
                             }
-                            else 
+                            else
                             {
-                                return false;
+                                throw new ArgumentNullException("Uma ou mais flags de EqualsFlags() não foram adicionadas ao comando.");
                             }
                         }
                     }
@@ -240,12 +235,12 @@ namespace Prompito.Classes
         
         public bool MappedLineTester(ArgsMapper argsMapper, string sequence) 
         {
-            // ^(((arg|flag)([1-9]+))((\s)(arg|flag)([1-9]+))+?)$
+            // ^(((arg|flag)([1-9]+))(((\s)(arg|flag)([1-9]+))+)?)$
             try
             {
                 if (!string.IsNullOrWhiteSpace(sequence) && argsMapper != null) 
                 {
-                    var sequenceRegex = new Regex(@"^(((arg|flag)([1-9]+))((\s)+(arg|flag)([1-9]+))+?)$");
+                    var sequenceRegex = new Regex(@"^(((arg|flag)([1-9]+))(((\s)+(arg|flag)([1-9]+))+)?)$");
                     var sequenceSplitRegex = new Regex(@"\s+");
 
                     if (sequenceRegex.IsMatch(sequence)) 
@@ -287,7 +282,7 @@ namespace Prompito.Classes
             {
                 if (!string.IsNullOrWhiteSpace(sequence) && !string.IsNullOrWhiteSpace(testerFlag) && argsMapper != null)
                 {
-                    var sequenceRegex = new Regex(@"^(((arg|flag)([1-9]+))((\s)+(arg|flag)([1-9]+))+?)$");
+                    var sequenceRegex = new Regex(@"^(((arg|flag)([1-9]+))(((\s)+(arg|flag)([1-9]+))+)?)$");
                     var sequenceSplitRegex = new Regex(@"\s+");
                     var testerFlagRegex = new Regex(@"^(flag([1-9]+)=(-([a-zA-Z0-9])))$");                    
 
@@ -299,10 +294,13 @@ namespace Prompito.Classes
 
                         var flag = testerFlag.Split("=");
 
-                        if (argsMapper.GetArgsMapper.Keys.SequenceEqual(sequenceArgs) && EqualsFlags(argsMapper.GetArgs(flag[0]), flag[1]))
+                        if (argsMapper.GetArgsMapper.Keys.SequenceEqual(sequenceArgs))
                         {
-                            return true;
-                        }
+                            if (EqualsFlags(argsMapper.GetArgs(flag[0]), flag[1])) 
+                            {
+                                return true;
+                            }                            
+                        }                        
                     }
                     else
                     {
