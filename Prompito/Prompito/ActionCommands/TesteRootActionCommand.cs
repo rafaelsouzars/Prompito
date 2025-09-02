@@ -1,9 +1,4 @@
 ﻿using Prompito.Classes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Prompito.ActionCommands
 {
@@ -18,6 +13,12 @@ namespace Prompito.ActionCommands
                 );
 
             AddFlag(
+                "-p",
+                "--program-name",
+                "Exibe o nome do programa."
+                );
+
+            AddFlag(
                 "-h",
                 "--help",
                 "Ajuda do commando TestRootActionCommand"
@@ -28,28 +29,31 @@ namespace Prompito.ActionCommands
         {
             try
             {
-                if (argsMapper.TotalArgs > 0)
-                {
-                    if (MappedLineTester(argsMapper, "flag1 arg1", "flag1=-m"))
-                    {
-                        if (!string.IsNullOrEmpty(argsMapper.GetArgs("arg1")))
-                        {
-                            Console.WriteLine("Mensagem: {0}", argsMapper.GetArgs("arg1"));
-                        }
-                        else
-                        {
-                            Console.WriteLine("Sem mensagem!!!");
-                        }
-                    }
-                    else if (MappedLineTester(argsMapper, "flag1", "flag1=-h"))
-                    {
-                        Help();
-                    }
-                }
-                
-                
-                
 
+                MappedLineTester(argsMapper, "flag1", "flag1=-p", () => {
+
+                    Console.WriteLine("Nome do programa: {0}", AppDomain.CurrentDomain.FriendlyName);
+
+                });
+
+                MappedLineTester(argsMapper, "flag1 arg1", "flag1=-m", () => {
+
+                    if (!string.IsNullOrEmpty(argsMapper.GetArgs("arg1")))
+                    {
+                        Console.WriteLine("Mensagem: {0}", argsMapper.GetArgs("arg1"));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Sem mensagem!!!");
+                    }
+
+                });
+
+                MappedLineTester(argsMapper, "flag1", "flag1=-h", () => {
+
+                    Help();
+
+                });
 
             }
             catch (Exception exception)
