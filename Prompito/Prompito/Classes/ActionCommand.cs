@@ -9,9 +9,7 @@
  */
 using Prompito.AbstractClasses;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Xml;
 
 namespace Prompito.Classes
 {
@@ -231,8 +229,21 @@ namespace Prompito.Classes
                 Console.WriteLine(" [ ERROR ]\n\t{0}", exception.Message);                
             }
             return false;
-        } 
-        
+        }
+
+        /// <summary>
+        /// Este método testa a linha de comando mapeada.
+        /// </summary>
+        /// <param name="argsMapper">Objeto <b>ArgsMapper</b> com a linha de comando mapeada</param>
+        /// <param name="sequence">Formato de string com a sequencia de teste</param>
+        /// <remarks><example>
+        /// Exemplo:
+        /// <code>
+        ///     if (MappedLineTester(argsMapper, "flag1 arg1"))
+        ///     {
+        ///         WriteLine("Mensagem: {0}", argsMapper.GetArgs("arg1"));
+        ///     }
+        /// </code></example></remarks>
         public bool MappedLineTester(ArgsMapper argsMapper, string sequence) 
         {
             // ^(((arg|flag)([1-9]+))(((\s)(arg|flag)([1-9]+))+)?)$
@@ -275,6 +286,23 @@ namespace Prompito.Classes
             //throw new NotImplementedException("Not implementation");
         }
 
+        /// <summary>
+        /// Este método testa a linha de comando e uma flag mapeada.
+        /// </summary>
+        /// <param name="argsMapper">Objeto <b>ArgsMapper</b> com a linha de comando mapeada</param>
+        /// <param name="sequence">Formato de string com a sequencia de teste</param>
+        /// <param name="testerFlag">Formato de string com a flag para teste</param>
+        /// <remarks><example>
+        /// Exemplo:
+        /// <code>
+        ///     if (MappedLineTester(argsMapper, "flag1 arg1", "flag1=-m"))
+        ///     {
+        ///         if (!string.IsNotNullOrEmpty(argsMapper.GetArgs("arg1")))
+        ///         {
+        ///             WriteLine("Mensagem: {0}", argsMapper.GetArgs("arg1"));
+        ///         }         
+        ///     }
+        /// </code></example></remarks>
         public bool MappedLineTester(ArgsMapper argsMapper, string sequence, string testerFlag)
         {
             // ^(flag([1-9]+)=(-([a-zA-Z0-9])|--([a-zA-Z0-9]{2,})(-([a-zA-Z0-9]+))?))$
