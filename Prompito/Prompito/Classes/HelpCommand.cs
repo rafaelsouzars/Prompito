@@ -22,7 +22,7 @@ namespace Prompito.Classes
             {
                 if (receives != null)
                 {
-                    Console.WriteLine(" [ AJUDA ]\n");
+                    //Console.WriteLine(" [ AJUDA ]\n");
                     if (receives.Count > 0)
                     {
                         foreach (var receive in receives)

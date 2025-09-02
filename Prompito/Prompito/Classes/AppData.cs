@@ -18,7 +18,7 @@ namespace Prompito.Classes
         private string _versionNumber = "";
         private string _description = "";
         private string _profileURL = "";
-        private string _repositorieURL = "";
+        private string _repositorieURL = "";        
         public string GetAppName { get => _appName; }
         public string GetVersionNumber { get => _versionNumber; }
         public string GetDescription { get => _description; }
@@ -28,18 +28,9 @@ namespace Prompito.Classes
         public AppData(string appName = "Prompito", string versionNumber = "v1.0.0", string description = "", string profileURL = "", string repositorieURL = "")
         {
             try 
-            {                
+            {
 
-                if (string.IsNullOrWhiteSpace(appName))
-                {
-                                       
-                    _appName = new Program().ToString().Replace(".Program", "") ?? "Prompito";                    
-                }
-                else
-                {
-                    _appName = appName;
-                }
-
+                _appName = appName ?? AppDomain.CurrentDomain.FriendlyName;
                 _versionNumber = versionNumber ?? throw new ArgumentNullException("O AppData não pode ter valores nulos", nameof(versionNumber));
                 _description = description ?? throw new ArgumentNullException("O AppData não pode ter valores nulos", nameof(description));
                 _profileURL = profileURL ?? throw new ArgumentNullException("O AppData não pode ter valores nulos", nameof(profileURL));
