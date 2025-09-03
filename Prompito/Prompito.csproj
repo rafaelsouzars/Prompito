@@ -13,6 +13,9 @@
     <RepositoryUrl>https://github.com/rafaelsouzars/Prompito</RepositoryUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageIcon>prompito_128x128.png</PackageIcon>
+    <PackageReleaseNotes>Primeira versão</PackageReleaseNotes>
+    <PackageTags>prompito; cli; prompt; console; comando;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +34,10 @@
       <PackagePath>\</PackagePath>
     </None>
     <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="D:\RAVI\Imagens\logos\prompito\prompito_128x128.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
