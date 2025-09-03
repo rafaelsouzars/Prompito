@@ -10,7 +10,7 @@ Utilitario para desenvolvimento de aplicações CLI.
 - Primeira versão
 
 ## Introdução
-O _Prompito_ é uma biblioteca de desenvolvimento de aplicações CLI.
+O _Prompito_ é uma ferramenta de desenvolvimento para aplicações CLI.
 
 ## Instalação
 Baixe o binário no repositorio clicando [aqui](https://github.com/rafaelsouzars/prompito/releases)
@@ -79,14 +79,64 @@ Adicionando seu _ActionCommand_:
 using Prompito;
 using <myActionCommand-namespace>;
 
+// Inica o executor
 var app = new Executer();
 
+// Caso precise apenas utilizar o propio nome do aplicativo como comando
+app.AddRootCommand(new MyRootCommand());
+
+// Cria um comando
 app.AddCommand("command", "description", new MyActionCommand());
 
+// Recebe os argumentos do console para execução dos comandos
 app.ExecuteCommands(args);
 ```
 
-## Exemplo
+## Exemplos
+```C#
+// MyRootAction
+using Prompito.Classes;
+
+namespace MyActionCommands
+{
+	class MyRootActionCommand : ActionCommand 
+	{	
+		public MyActionCommand()
+        {            
+            AddFlag(
+                "-h",
+                "--help",
+                "Ajuda do programa"
+                );
+        }
+
+		public override void Run (ArgsMapper argsMapper) 
+		{
+			try
+            {
+                MappedLineTester(argsMapper, "arg1", () => {
+                
+                    Console.Writeline("Informações do aplicativo");
+
+                });                
+                
+                MappedLineTester(argsMapper, "arg1 flag1", "flag1=-h", () => {
+                
+                    Help();
+                
+                });
+                                
+               
+            }
+            catch (Exception exception) 
+            {
+                Console.WriteLine(" [ ERROR ]\n\t{0}",exception.Message);
+            }
+		}
+	}
+}
+
+```
 ```C#
 // MyAction
 using Prompito.Classes;
@@ -114,28 +164,23 @@ namespace MyActionCommands
 		{
 			try
             {
-                if (argsMapper.GetArg.Count == 1) 
-                {
-                    if (hookFiles.GitHookDirectoryExist())
-                    {
-                        hookFiles.CreateHookFile();
-                    } 
-                }
-                else if (argsMapper.GetArg.Count == 2) 
-                {
-                    if (string.Equals(argsMapper.GetArg["flag1"],"-r")) 
-                    {
-                        hookFiles.CreateHookFile(hookFiles.CreateFileRepositorieStream()); 
-                    }
-                    else 
-                    {
-                        throw new ArgumentException("Argumento não reconhecido: ", argsMapper.GetArg["flag1"]);
-                    }
-                }
-                else if (argsMapper.GetArg.Count > 2) 
-                {
-                    throw new ArgumentException("Argumentos não reconhecidos: ", argsMapper.ToString());
-                }
+                MappedLineTester(argsMapper, "arg1", () => {
+                
+                    Console.WriteLine("Bem vindo ao comando Init"); 
+
+                });
+                
+                MappedLineTester(argsMapper, "arg1 flag1 arg2", "flag1=-m", () => {
+                
+                    Console.WriteLine("Mensagem: {0}", argsMapper.GetArgs("arg2"));
+                
+                }); 
+                
+                MappedLineTester(argsMapper, "arg1 flag1", "flag1=-h", () => {
+                
+                    Help();
+                
+                });
                                 
                
             }
@@ -164,6 +209,8 @@ app.InsertData(new {
 	ProfileURL = "https://github.com/dev"
 	RepositorieURL = "https://github.com/dev/my-app"
 });
+
+app.AddRootCommand(new MyRootCommand());
 
 app.AddCommand("init", "Inicia um comando", new MyActionCommand());
 
