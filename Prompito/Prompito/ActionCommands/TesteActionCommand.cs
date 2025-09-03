@@ -7,7 +7,6 @@
  * Github: https://github.com/rafaelsouzars
  * 
  */
-using System.Reflection;
 using Prompito.Classes;
 
 namespace Prompito.ActionCommands
@@ -57,47 +56,52 @@ namespace Prompito.ActionCommands
         {
             try
             {
-                if (argsMapper.TotalArgs == 1)
-                {
+                
+                MappedLineTester(argsMapper, "arg1", () => {
+
                     Help();
-                }
-                else if (argsMapper.TotalArgs > 1)
-                {
-                    if (EqualsFlags(argsMapper.GetArgs("flag1"), "-m"))
+
+                });
+                
+
+                MappedLineTester(argsMapper, "arg1 flag1 arg2", "flag1=-m", () => {
+
+                    Console.WriteLine(argsMapper.GetArgs("arg2"));
+
+                });
+
+                MappedLineTester(argsMapper, "arg1 flag1", "flag1=-a", () => {
+
+                    argsMapper.ShowArgsMapper();
+
+                });
+
+                MappedLineTester(argsMapper, "arg1 flag1", "flag1=-f", () => {
+
+                    foreach (var f in Flags)
                     {
-                        Console.WriteLine(argsMapper.GetArgs("arg2"));
+                        Console.WriteLine("Flag => {0}", f);
                     }
 
-                    else if (EqualsFlags(argsMapper.GetArgs("flag1"), "-a"))
-                    {
-                        argsMapper.ShowArgsMapper();
-                    }
+                });
 
-                    else if (EqualsFlags(argsMapper.GetArgs("flag1"), "-f"))
-                    {
-                        foreach (var f in Flags)
-                        {
-                            Console.WriteLine("Flag => {0}", f);
-                        }
-                    }                    
+                MappedLineTester(argsMapper, "arg1 flag1", "flag1=-p", () => {
 
-                    else if (MappedLineTester(argsMapper, "arg1 flag1", "flag1=-p"))
-                    {       
-                        
-                        Console.WriteLine("{0}", AppDomain.CurrentDomain.FriendlyName);
-                    }
+                    Console.WriteLine("{0}", AppDomain.CurrentDomain.FriendlyName);
 
-                    else if (MappedLineTester(argsMapper,"arg1 flag1","flag1=-s")) 
-                    {
-                        Console.WriteLine("Teste de sequencia ok");
-                    }
+                });
 
-                    else if (MappedLineTester(argsMapper, "arg1 flag1", "flag1=-h")) 
-                    {
-                        Help();
-                    }
-                                        
-                }                
+                MappedLineTester(argsMapper, "arg1 flag1", "flag1=-s", () => {
+
+                    Console.WriteLine("Teste de sequencia ok");
+
+                });
+
+                MappedLineTester(argsMapper, "arg1 flag1", "flag1=-h", () => {
+
+                    Help();
+
+                });
 
 
             }
