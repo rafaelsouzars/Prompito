@@ -1,4 +1,4 @@
-<div align="center"><img width="200" height="200" alt="ganchito" src="" /></div>
+<div align="center"><img width="260" height="260" alt="prompito04" src="https://github.com/user-attachments/assets/0da729ea-6242-4518-a09d-5d9abd9bff18" /></div>
 
 # Prompito v1.0.0
 
