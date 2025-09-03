@@ -1,8 +1,8 @@
 ﻿/*
  * 
- * Prompito
+ * Ganchito
  * Version: v1.0.0
- * Description: Ferramenta C# para criação de CLI
+ * Description: Utilitário de git hooks
  * Author: rafaelsouzars
  * Github: https://github.com/rafaelsouzars
  * 
@@ -18,12 +18,20 @@ namespace Prompito
     /// </summary>   
     class Executer : IExecuter
     {        
-        private static object? _appData;                
-        private HelpCommand _appHelperActionCommand = new HelpCommand();
-        private ActionCommand? _rootActionCommand;
-        private Dictionary<string, (string, ActionCommand)> _receivers = new Dictionary<string, (string, ActionCommand)>();  
+        private static object? _appData;
+        private static bool _DEBUG_MODE = false;
+        private static List<ActionCommand> _receivers = new List<ActionCommand>();
+
+        public bool DEBUG_MODE { get => _DEBUG_MODE; set { _DEBUG_MODE = value; } }       
         
-        
+
+        private static void DebugMode(string message)
+        {
+            if (_DEBUG_MODE)
+            {
+                Console.WriteLine($" [ DEBUG MODE ON ]\n\t{message}\n");
+            }
+        }
 
         /// <summary>
         /// O Método InsertAppData. Recebe um object com as informações da aplicação.
@@ -36,13 +44,15 @@ namespace Prompito
             {                
                 _appData = appData ?? throw new ArgumentNullException("O ProgramData não pode ser nulo", nameof(appData));
 
-                var appName = _appData?.GetType().GetProperty("AppName")?.GetValue(_appData) ?? "";
-                var version = _appData?.GetType().GetProperty("Version")?.GetValue(_appData) ?? "";
-                var description = _appData?.GetType().GetProperty("Description")?.GetValue(_appData) ?? "";
-                var profileURL = _appData?.GetType().GetProperty("ProfileURL")?.GetValue(_appData) ?? "";
-                var repositorieURL = _appData?.GetType().GetProperty("RepositorieURL")?.GetValue(_appData) ?? "";                
+                var appName = _appData?.GetType().GetProperty("AppName")?.GetValue(_appData);
+                var version = _appData?.GetType().GetProperty("Version")?.GetValue(_appData);
+                var description = _appData?.GetType().GetProperty("Description")?.GetValue(_appData);
+                var profileURL = _appData?.GetType().GetProperty("ProfileURL")?.GetValue(_appData);
+                var repositorieURL = _appData?.GetType().GetProperty("RepositorieURL")?.GetValue(_appData);                
 
-                Screen.About(new AppData((string)appName, (string)version, (string)description, (string)profileURL, (string)repositorieURL));               
+                Screen.About(new AppData((string)appName, (string)version, (string)description, (string)profileURL, (string)repositorieURL));
+                                
+                DebugMode($"AppName: {appName}, Version: {version}, Description: {description}, Profile: {profileURL}, Repositorie: {repositorieURL}");
                 
             }
             catch (Exception exception)
@@ -52,89 +62,36 @@ namespace Prompito
         }
 
         /// <summary>
-        /// Método ExecuteCommand(). Recebe um array de argumentos, do Console, e repassa para o metodo Run() dos Commands.
+        /// O Método ExecuteCommand. Recebe um array de argumentos, do Console, e repassa para o metodo Run() dos Commands.
         /// </summary>
         /// <param name="args">Array de argumentos repassa pelo console</param>        
         public void ExecuteCommands(string[] args) 
         {
-            try
-            {
-                if (args.Length >= 1)
-                {
-                    if (_receivers.Keys.Contains<string>(args[0]))
-                    {
-                        if (_receivers.TryGetValue(args[0], out (string, ActionCommand) receiver))
-                        {
-                            var command = new Command<ActionCommand>(receiver.Item2, r => r.Run(new ArgsMapper(args)));
-                            command.Execute();
-                        }
-                    }
-                    else if (_rootActionCommand != null) 
-                    {
-                        var command = new Command<ActionCommand>(_rootActionCommand, r => r.Run(new ArgsMapper(args)));
-                        command.Execute();
-                    }
-                    else
-                    {
-                        throw new ArgumentException($" {args[0],-5} - Commando não reconhecido\n");
-                    }
-
-                }
-                else
-                {
-                    if (_rootActionCommand != null) 
-                    {
-                        _rootActionCommand.Help();
-                    }
-
-                    if (_appHelperActionCommand != null)
-                    {
-                        var helpActionCommand = new Command<HelpCommand>(_appHelperActionCommand, r => r.Run(_receivers));
-                        helpActionCommand.Execute();                        
-                    }
-                    
-                }
-
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-            }
-
-        }
-
-        public void AddRootCommand(ActionCommand rootActionCommand) 
-        {
             try 
             {
-                _rootActionCommand = rootActionCommand ?? throw new ArgumentNullException(nameof(rootActionCommand), "O parametro não pode ser nulo");
+                foreach (var receiver in _receivers)
+                {
+                    var command = new Command<ActionCommand>(receiver, r => r.Run(args));
+                    command.Execute();
+                }         
+                
             }
             catch (Exception exception) 
             {
-                Console.WriteLine(" [ ERROR ]\n\t{0}", exception.Message);
+                Console.WriteLine(exception);
             }
-        }
-
-        /// <summary>
-        /// Método AddCommand(). Adiciona um commando ao Executer
-        /// </summary>
-        /// <param name="commandName"></param>
-        /// <param name="newActionCommand"></param>        
-        public void AddCommand (string commandName, ActionCommand newActionCommand)
-        {
-            _receivers.Add(commandName, ("", newActionCommand));
+            
         }
 
         /// <summary>
         /// Método AddCommand. Adiciona um commando ao Executer
         /// </summary>
         /// <param name="commandName"></param>
-        /// <param name="newActionCommand"></param> 
-        public void AddCommand (string commandName, string description, ActionCommand newActionCommand)
+        /// <param name="newCommand"></param>        
+        public void AddCommand(ActionCommand newCommand)
         {
-            _receivers.Add(commandName, (description, newActionCommand));
-        }
-        
+            _receivers.Add(newCommand);
+        }             
 
         /// <summary>
         /// Método ScreenAbout. Ativa e desativa a tela do App.

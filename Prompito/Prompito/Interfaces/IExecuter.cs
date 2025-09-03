@@ -13,7 +13,9 @@ using Prompito.Classes;
 namespace Prompito.Interfaces
 {
     interface IExecuter
-    {        
+    {
+
+        public bool DEBUG_MODE { get; set; }
         public void Init() 
         {
             
@@ -27,11 +29,6 @@ namespace Prompito.Interfaces
         public void ExecuteCommand(string[] args) 
         {
             // Implementation
-        }
-
-        public void AddRootCommand(ActionCommand rootActionCommand) 
-        {
-            
         }
 
         public void AddCommand(string commandName, ActionCommand newCommand)

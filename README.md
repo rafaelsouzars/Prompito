@@ -1,4 +1,4 @@
-<div align="center"><img width="260" height="260" alt="prompito04" src="https://github.com/user-attachments/assets/0da729ea-6242-4518-a09d-5d9abd9bff18" /></div>
+<div align="center"><img width="200" height="200" alt="ganchito" src="" /></div>
 
 # Prompito v1.0.0
 
@@ -10,7 +10,7 @@ Utilitario para desenvolvimento de aplicações CLI.
 - Primeira versão
 
 ## Introdução
-O _Prompito_ é uma ferramenta de desenvolvimento para aplicações CLI.
+O _Prompito_ é uma biblioteca que facilia o desenvolvimento de aplicações CLI.
 
 ## Instalação
 Baixe o binário no repositorio clicando [aqui](https://github.com/rafaelsouzars/prompito/releases)
@@ -20,16 +20,6 @@ https://github.com/rafaelsouzars/prompito/releases
 ```
 
 ## Tutorial
-Mapa de argumentos:
-```powershell
-./prompito init -r "repo"
-```
-| Key | Value |
-|:---:|:-----:|
-|arg1 | init|
-|flag1| -r  |
-|arg2 | repo|
-
 Para iniciar o projeto:
 ```C#
 using Promito;
@@ -66,9 +56,9 @@ Criando um _ActionCommand_:
 ```C#
 using Prompito.Classes;
 
-class <MyActionCommand> : ActionCommand
+class MyClassAction : ActionCommand
 {
-	public override void Run(ArgsMapper argsMapper) 
+	public override void Run(string[] args) 
 	{
 		// Implementation
 	}
@@ -77,117 +67,34 @@ class <MyActionCommand> : ActionCommand
 Adicionando seu _ActionCommand_:
 ```C#
 using Prompito;
-using <myActionCommand-namespace>;
+using <my-namespace>;
 
-// Inica o executor
 var app = new Executer();
 
-// Caso precise apenas utilizar o propio nome do aplicativo como comando
-app.AddRootCommand(new MyRootCommand());
+app.AddCommand(new MyClassAction());
 
-// Cria um comando
-app.AddCommand("command", "description", new MyActionCommand());
-
-// Recebe os argumentos do console para execução dos comandos
 app.ExecuteCommands(args);
 ```
 
-## Exemplos
-```C#
-// MyRootAction
-using Prompito.Classes;
-
-namespace MyActionCommands
-{
-	class MyRootActionCommand : ActionCommand 
-	{	
-		public MyActionCommand()
-        {            
-            AddFlag(
-                "-h",
-                "--help",
-                "Ajuda do programa"
-                );
-        }
-
-		public override void Run (ArgsMapper argsMapper) 
-		{
-			try
-            {
-                MappedLineTester(argsMapper, "arg1", () => {
-                
-                    Console.Writeline("Informações do aplicativo");
-
-                });                
-                
-                MappedLineTester(argsMapper, "arg1 flag1", "flag1=-h", () => {
-                
-                    Help();
-                
-                });
-                                
-               
-            }
-            catch (Exception exception) 
-            {
-                Console.WriteLine(" [ ERROR ]\n\t{0}",exception.Message);
-            }
-		}
-	}
-}
-
-```
+## Exemplo
 ```C#
 // MyAction
 using Prompito.Classes;
 
 namespace MyActionCommands
 {
-	class MyActionCommand : ActionCommand 
-	{	
-		public MyActionCommand()
-        {            
-            AddFlag(
-                "-r",
-                "--repo-hook",
-                "Criar hook a partir de repositório de script"                
-                );
-
-            AddFlag(
-                "-h",
-                "--help",
-                "Ajuda do comando"
-                );
-        }
-
-		public override void Run (ArgsMapper argsMapper) 
+	class MyAction : ActionCommand 
+	{		
+		public override void Run (string[] args) 
 		{
-			try
-            {
-                MappedLineTester(argsMapper, "arg1", () => {
-                
-                    Console.WriteLine("Bem vindo ao comando Init"); 
-
-                });
-                
-                MappedLineTester(argsMapper, "arg1 flag1 arg2", "flag1=-m", () => {
-                
-                    Console.WriteLine("Mensagem: {0}", argsMapper.GetArgs("arg2"));
-                
-                }); 
-                
-                MappedLineTester(argsMapper, "arg1 flag1", "flag1=-h", () => {
-                
-                    Help();
-                
-                });
-                                
-               
-            }
-            catch (Exception exception) 
-            {
-                Console.WriteLine(" [ ERROR ]\n\t{0}",exception.Message);
-            }
+			if (args.Length != 0 and args[0] == "init") 
+			{
+			
+			}
+			if (args.Length == 0) 
+			{
+				Console.Write("Help!");
+			}
 		}
 	}
 }
@@ -200,19 +107,7 @@ using MyActionCommands;
 
 var app = new Executer();
 
-app.ScreenAbout(true);
-
-app.InsertData(new {
-	AppName = "my-app",
-	Version = "v1.0.0",
-	Description = "My first app",
-	ProfileURL = "https://github.com/dev"
-	RepositorieURL = "https://github.com/dev/my-app"
-});
-
-app.AddRootCommand(new MyRootCommand());
-
-app.AddCommand("init", "Inicia um comando", new MyActionCommand());
+app.AddCommand(new MyAction());
 
 app.ExecuteCommands(args);
 ```
