@@ -8,7 +8,7 @@
  * 
  */
 
-namespace Prompito.Interfaces
+namespace prompito.Prompito.Interfaces
 {
     interface ICommand
     {
