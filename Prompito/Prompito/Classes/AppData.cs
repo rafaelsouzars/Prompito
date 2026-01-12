@@ -1,7 +1,7 @@
 ﻿/*
  * 
  * Prompito
- * Version: v1.0.0
+ * Version: v1.0.1
  * Description: Utilitário de git hooks
  * Author: rafaelsouzars
  * Github: https://github.com/rafaelsouzars
@@ -10,7 +10,7 @@
 using System.Reflection;
 
 
-namespace Prompito.Classes
+namespace prompito.Prompito.Classes
 {
     class AppData
     {

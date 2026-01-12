@@ -1,17 +1,17 @@
 ﻿/*
  * 
  * Prompito
- * Version: v1.0.0
+ * Version: v1.0.1
  * Description: Utilitário de git hooks
  * Author: rafaelsouzars
  * Github: https://github.com/rafaelsouzars
  * 
  */
-using Prompito.AbstractClasses;
+using prompito.Prompito.AbstractClasses;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
-namespace Prompito.Classes
+namespace prompito.Prompito.Classes
 {
     /// <summary>
     /// Está classe pai cria uma instância <b>ActionCommand</b> para execução dos comandos. <br/>    
@@ -25,7 +25,7 @@ namespace Prompito.Classes
     /// </code>
     /// </example>        
     /// </remarks>
-    class ActionCommand : AbstractActionCommandBase
+    public class ActionCommand : AbstractActionCommandBase
     {
         protected Dictionary<string, (string, string)> _flags = new Dictionary<string, (string, string)>();
         protected ReadOnlyDictionary<string, (string, string)> _flagsReadOnly;

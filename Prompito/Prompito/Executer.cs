@@ -1,22 +1,22 @@
 ﻿/*
  * 
  * Prompito
- * Version: v1.0.0
+ * Version: v1.1.0
  * Description: Ferramenta C# para criação de CLI
  * Author: rafaelsouzars
  * Github: https://github.com/rafaelsouzars
  * 
  */
-using Prompito.Interfaces;
-using Prompito.Classes;
-using Prompito.ConsoleScreen;
+using prompito.Prompito.Interfaces;
+using prompito.Prompito.Classes;
+using prompito.Prompito.ConsoleScreen;
 
-namespace Prompito
+namespace prompito.Prompito
 {
     /// <summary>
     /// Class Executer(). Executa os commandos adicionados.
     /// </summary>   
-    class Executer : IExecuter
+    public class Executer : IExecuter
     {        
         private static object? _appData;                
         private HelpCommand _appHelperActionCommand = new HelpCommand();

@@ -1,7 +1,7 @@
 ﻿/*
  * 
  * Prompito
- * Version: v1.0.0
+ * Version: v1.0.1
  * Description: Utilitário de git hooks
  * Author: rafaelsouzars
  * Github: https://github.com/rafaelsouzars
@@ -9,9 +9,9 @@
  */
 
 using System.Text.RegularExpressions;
-using Prompito.Classes;
+using prompito.Prompito.Classes;
 
-namespace Prompito.ConsoleScreen
+namespace prompito.Prompito.ConsoleScreen
 {
     class Screen
     {
