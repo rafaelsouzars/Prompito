@@ -1,15 +1,15 @@
 ﻿/*
  * 
  * Prompito
- * Version: v1.0.0
+ * Version: v1.0.1
  * Description: Ferramenta C# para criação de CLI
  * Author: rafaelsouzars
  * Github: https://github.com/rafaelsouzars
  * 
  */
 // See https://aka.ms/new-console-template for more information
-using Prompito;
-using Prompito.ActionCommands;
+using prompito.Prompito;
+using prompito.Prompito.ActionCommands;
 
 var app = new Executer();
 

@@ -8,9 +8,9 @@
  * 
  */
 
-using Prompito.Classes;
+using prompito.Prompito.Classes;
 
-namespace Prompito.Interfaces
+namespace prompito.Prompito.Interfaces
 {
     interface IExecuter
     {        

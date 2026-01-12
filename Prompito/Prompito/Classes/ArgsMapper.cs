@@ -1,7 +1,7 @@
 ﻿/*
  * 
  * Prompito
- * Version: v1.1.0
+ * Version: v1.0.1
  * Description: Ferramenta C# para criação de CLI
  * Author: rafaelsouzars
  * Github: https://github.com/rafaelsouzars
@@ -10,7 +10,7 @@
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
-namespace Prompito.Classes
+namespace prompito.Prompito.Classes
 {
     /// <summary>
     /// class ArgsMapper. Mapeia o array de argumentos identificando como argumentos e flags.

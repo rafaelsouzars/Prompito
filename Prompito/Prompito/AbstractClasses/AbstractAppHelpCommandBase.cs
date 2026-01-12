@@ -1,15 +1,15 @@
 ﻿/*
  * 
  * Prompito
- * Version: v1.0.0
+ * Version: v1.0.1
  * Description: Utilitário de git hooks
  * Author: rafaelsouzars
  * Github: https://github.com/rafaelsouzars
  * 
  */
-using Prompito.Classes;
+using prompito.Prompito.Classes;
 
-namespace Prompito.AbstractClasses
+namespace prompito.Prompito.AbstractClasses
 {
 	abstract class AbstractAppHelpCommandBase
 	{

@@ -1,13 +1,14 @@
 <div align="center"><img width="260" height="260" alt="prompito04" src="https://github.com/user-attachments/assets/0da729ea-6242-4518-a09d-5d9abd9bff18" /></div>
 
-# Prompito v1.0.0
+# Prompito v1.0.1
 
-![Version](https://img.shields.io/badge/version-1.0.0-green) ![Status](https://img.shields.io/badge/status-development-yellow) ![Github Release](https://img.shields.io/github/v/release/rafaelsouzars/prompito)
+![Version](https://img.shields.io/badge/version-1.0.1-green) ![Status](https://img.shields.io/badge/status-development-yellow) ![Github Release](https://img.shields.io/github/v/release/rafaelsouzars/prompito)
 
 Utilitario para desenvolvimento de aplicações CLI.
 
 ### Notas da versão
-- Primeira versão
+- Correção no nível de acesso da classe Executer.
+- Correção no nome do namespace.
 
 ## Introdução
 O _Prompito_ é uma ferramenta de desenvolvimento para aplicações CLI.
@@ -32,7 +33,7 @@ Mapa de argumentos:
 
 Para iniciar o projeto:
 ```C#
-using Promito;
+using prompito.Promito;
 
 // Cria um Executer
 var app = new Executer();
@@ -42,7 +43,7 @@ app.ExecuteCommands(args);
 ```
 Para iniciar o _letreiro_ com as informações do _app_:
 ```C#
-using Prompito;
+using prompito.Prompito;
 
 // Cria um Executer
 var app = new Executer();
@@ -64,7 +65,7 @@ app.ExecuteCommands(args);
 ```
 Criando um _ActionCommand_:
 ```C#
-using Prompito.Classes;
+using prompito.Prompito.Classes;
 
 class <MyActionCommand> : ActionCommand
 {
@@ -76,7 +77,7 @@ class <MyActionCommand> : ActionCommand
 ```
 Adicionando seu _ActionCommand_:
 ```C#
-using Prompito;
+using prompito.Prompito;
 using <myActionCommand-namespace>;
 
 // Inica o executor
@@ -95,7 +96,7 @@ app.ExecuteCommands(args);
 ## Exemplos
 ```C#
 // MyRootAction
-using Prompito.Classes;
+using prompito.Prompito.Classes;
 
 namespace MyActionCommands
 {
@@ -139,7 +140,7 @@ namespace MyActionCommands
 ```
 ```C#
 // MyAction
-using Prompito.Classes;
+using prompito.Prompito.Classes;
 
 namespace MyActionCommands
 {
@@ -195,7 +196,7 @@ namespace MyActionCommands
 ```
 ```C#
 // Program.cs
-using Prompito;
+using prompito.Prompito;
 using MyActionCommands;
 
 var app = new Executer();

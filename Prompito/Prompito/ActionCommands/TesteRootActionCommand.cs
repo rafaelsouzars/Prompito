@@ -1,6 +1,15 @@
-﻿using Prompito.Classes;
+﻿/*
+ * 
+ * Prompito
+ * Version: v1.0.1
+ * Description: Ferramenta C# para criação de CLI
+ * Author: rafaelsouzars
+ * Github: https://github.com/rafaelsouzars
+ * 
+ */
+using prompito.Prompito.Classes;
 
-namespace Prompito.ActionCommands
+namespace prompito.Prompito.ActionCommands
 {
     class TesteRootActionCommand : ActionCommand
     {
