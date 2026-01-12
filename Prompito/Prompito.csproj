@@ -14,7 +14,7 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageIcon>prompito_128x128.png</PackageIcon>
-    <PackageReleaseNotes>Primeira versão</PackageReleaseNotes>
+    <PackageReleaseNotes>Correção nas permissões de classes.</PackageReleaseNotes>
     <PackageTags>prompito; cli; prompt; console; comando;</PackageTags>
   </PropertyGroup>
 
