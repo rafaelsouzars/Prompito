@@ -8,6 +8,7 @@
  * 
  */
 using prompito.Prompito.Classes;
+using prompito.Prompito.Tools;
 
 namespace prompito.Prompito.ActionCommands
 {
@@ -88,6 +89,14 @@ namespace prompito.Prompito.ActionCommands
                 MappedLineTester(argsMapper, "arg1 flag1", "flag1=-p", () => {
 
                     Console.WriteLine("{0}", AppDomain.CurrentDomain.FriendlyName);
+                    
+                    var progressBar = new ProgressBar();
+
+                    for (int i = 0; i <= 100; i++) 
+                    {                        
+                        progressBar.DrawProgressBar(i);
+                        Thread.Sleep(25);
+                    }
 
                 });
 
