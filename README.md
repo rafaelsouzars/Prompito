@@ -1,14 +1,14 @@
 <div align="center"><img width="260" height="260" alt="prompito04" src="https://github.com/user-attachments/assets/0da729ea-6242-4518-a09d-5d9abd9bff18" /></div>
 
-# Prompito v1.0.1
+# Prompito v1.2.2
 
-![Version](https://img.shields.io/badge/version-1.0.1-green) ![Status](https://img.shields.io/badge/status-development-yellow) ![Github Release](https://img.shields.io/github/v/release/rafaelsouzars/prompito)
+![Version](https://img.shields.io/badge/version-1.2.2-green) ![Status](https://img.shields.io/badge/status-development-yellow) ![Github Release](https://img.shields.io/github/v/release/rafaelsouzars/prompito)
 
 Utilitario para desenvolvimento de aplicações CLI.
 
 ### Notas da versão
-- Correção no nível de acesso da classe Executer.
-- Correção no nome do namespace.
+- Correção na declaração da método "InsertAppData" no README.
+- 
 
 ## Introdução
 O _Prompito_ é uma ferramenta de desenvolvimento para aplicações CLI.
@@ -31,7 +31,7 @@ Mapa de argumentos:
 |flag1| -r  |
 |arg2 | repo|
 
-Para iniciar o projeto:
+Iniciar o projeto:
 ```C#
 using prompito.Promito;
 
@@ -41,7 +41,7 @@ var app = new Executer();
 // Recebe o array de argumentos do app
 app.ExecuteCommands(args);
 ```
-Para iniciar o _letreiro_ com as informações do _app_:
+Visualizar o _letreiro_ com as informações do _app_:
 ```C#
 using prompito.Prompito;
 
@@ -52,9 +52,9 @@ var app = new Executer();
 app.ScreenAbout(true);
 
 // Insere as informações do app
-app.InsertData(new {
+app.InsertAppData(new {
 	AppName = "my-app",
-	Version = "v1.0.0",
+	Version = "v1.2.1",
 	Description = "My first app",
 	ProfileURL = "https://github.com/<profile>"
 	RepositorieURL = "https://github.com/<profile>/<my-app>"
@@ -63,7 +63,7 @@ app.InsertData(new {
 // Recebe o array de argumentos do app
 app.ExecuteCommands(args);
 ```
-Criando um _ActionCommand_:
+Criar um _ActionCommand_:
 ```C#
 using prompito.Prompito.Classes;
 
@@ -87,7 +87,12 @@ var app = new Executer();
 app.AddRootCommand(new MyRootCommand());
 
 // Cria um comando
-app.AddCommand("command", "description", new MyActionCommand());
+app.AddCommand("command", new MyActionCommand());
+/* 
+ * Sobrecargas
+ * app.AddCommand("command", "description", new MyActionCommand());
+ * app.AddCommand("command, "description", showScreenAbout = false, new MyActionCommand());
+ */
 
 // Recebe os argumentos do console para execução dos comandos
 app.ExecuteCommands(args);
@@ -205,7 +210,7 @@ app.ScreenAbout(true);
 
 app.InsertData(new {
 	AppName = "my-app",
-	Version = "v1.0.0",
+	Version = "v1.2.1",
 	Description = "My first app",
 	ProfileURL = "https://github.com/dev"
 	RepositorieURL = "https://github.com/dev/my-app"
